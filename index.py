@@ -4,7 +4,8 @@ from nis import match
 from operator import index
 import pandas as pd
 from datetime import datetime
-
+import re
+import sys
 
 def execute():
     file_name =  'test.xlsx'# path to file + file name
@@ -26,29 +27,32 @@ def execute():
     copy.to_excel( sheet+ '.xlsx', index=False)
 
 #  execute()
-import re
-import sys
-# wa = input('input text wa :')
-wa = sys.stdin.read()
-matchs = re.findall('Total :\s+\d+', wa )
 
-# print(wa)
-res = {
-    'konfirmasi': 0,
-    'kontak_erat': 0,
-    'probable': 0,
-    'suspek': 0,
-}
 
-keys = [ "konfirmasi", "kontak_erat", "probable", "suspek" ]
-temp = []
-for matched in matchs:
-    t = re.search('\d+', matched)
-    temp.append(t.group(0))
+def getWaStr():
+    wa = sys.stdin.read()
+    matchs = re.findall('Total :\s+\d+', wa )
 
-i = 0
-for key in keys:
-    res[key] = int(temp[0])
-    i = i+1
+    # print(wa)
+    res = {
+        'konfirmasi': 0,
+        'kontak_erat': 0,
+        'probable': 0,
+        'suspek': 0,
+    }
 
-print(res)
+    keys = [ "konfirmasi", "kontak_erat", "probable", "suspek" ]
+    temp = []
+    for matched in matchs:
+        t = re.search('\d+', matched)
+        temp.append(t.group(0))
+
+    i = 0
+    for key in keys:
+        res[key] = int(temp[i])
+        i = i+1
+
+    return res
+
+wa = getWaStr()
+print(wa)
