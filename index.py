@@ -1,18 +1,22 @@
 
+from linecache import getline
 import pandas as pd
 from datetime import datetime
 import re
 import sys
 import os
+from pathlib import Path
+import glob
 
 def getLatestExcel():
-    search_dir = './'
-    files = filter(os.path.isfile, os.listdir(search_dir))
+    downloads_path = str(Path.home() / "Downloads/*.xlsx" )
+    search_dir = downloads_path #'./'
+    files = glob.glob(search_dir ) #filter(os.path.isfile, os.listdir(search_dir))
     files = [os.path.join(search_dir, f) for f in files]  # add path to each file
-    files.sort(key=lambda x: os.path.getmtime(x))
-    files_xls = [f for f in files if f[-4:] == 'xlsx']
-    
-    return files_xls[0]
+    # files.sort(key=lambda x: os.path.getmtime(x))
+    # files = [f for f in files if f[-4:] == 'xlsx']
+    files_xls = max(files, key = os.path.getmtime )
+    return files_xls
 
 def generateCopy(filenameParams=None, sheetParams=None):
     file_name = filenameParams if filenameParams else  getLatestExcel()# path to file + file name
