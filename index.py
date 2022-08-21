@@ -62,7 +62,7 @@ def getWaStr():
 # wa = getWaStr()
 
 wa = getWaStr()
-res = generateCopy(sheetParams='20082022')
+res = generateCopy()
 
 # print(res)
 for key in res :
