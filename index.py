@@ -3,9 +3,20 @@ import pandas as pd
 from datetime import datetime
 import re
 import sys
+import os
+
+def getLatestExcel():
+    search_dir = './'
+    files = filter(os.path.isfile, os.listdir(search_dir))
+    files = [os.path.join(search_dir, f) for f in files]  # add path to each file
+    files.sort(key=lambda x: os.path.getmtime(x))
+    files_xls = [f for f in files if f[-4:] == 'xlsx']
+    
+    return files_xls[0]
 
 def generateCopy(filenameParams=None, sheetParams=None):
-    file_name = filenameParams if filenameParams else  'test.xlsx'# path to file + file name
+    file_name = filenameParams if filenameParams else  getLatestExcel()# path to file + file name
+    
     sheet = sheetParams if sheetParams else datetime.today().strftime('%d%m%Y')  #'19082022'# sheet name or sheet number or list of sheet numbers and names
 
     print('prepare for copy excel file '+ file_name + ' with sheetname '+ sheet )
@@ -30,7 +41,6 @@ def generateCopy(filenameParams=None, sheetParams=None):
     return res
 
 #  execute()
-
 
 def getWaStr():
     print('insert WA content :')
