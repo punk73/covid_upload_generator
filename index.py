@@ -1,17 +1,14 @@
 
-import math
-from nis import match
-from operator import index
 import pandas as pd
 from datetime import datetime
 import re
 import sys
 
-def execute():
-    file_name =  'test.xlsx'# path to file + file name
-    sheet = datetime.today().strftime('%d%m%Y')  #'19082022'# sheet name or sheet number or list of sheet numbers and names
+def generateCopy(filenameParams=None, sheetParams=None):
+    file_name = filenameParams if filenameParams else  'test.xlsx'# path to file + file name
+    sheet = sheetParams if sheetParams else datetime.today().strftime('%d%m%Y')  #'19082022'# sheet name or sheet number or list of sheet numbers and names
 
-    print(sheet)
+    print('prepare for copy excel file '+ file_name + ' with sheetname '+ sheet )
     try:
         df = pd.read_excel(io=file_name, sheet_name=sheet)
     except Exception as e:
@@ -22,14 +19,22 @@ def execute():
 
     copy = df[['NO', 'STATUS EPIDEMIOLOGI SAAT INI', 'KESIMPULAN']]
 
-    print(copy.head(5)) 
+    konfirmasi  = len(df[df['STATUS EPIDEMIOLOGI SAAT INI']=='KONFIRMASI'])
+    kontak_erat = len(df[df['STATUS EPIDEMIOLOGI SAAT INI']=='KONTAK ERAT'])
+    probable    = len(df[df['STATUS EPIDEMIOLOGI SAAT INI']=='PROBABLE'])
+    suspek      = len(df[df['STATUS EPIDEMIOLOGI SAAT INI']=='SUSPEK'])
 
+    res = {"konfirmasi":konfirmasi, "kontak_erat":kontak_erat,"probable": probable, "suspek":suspek}
+    # print(copy.head(5)) 
     copy.to_excel( sheet+ '.xlsx', index=False)
+    return res
 
 #  execute()
 
 
 def getWaStr():
+    print('insert WA content :')
+    print('click ctrl+D after you paste the content!')
     wa = sys.stdin.read()
     matchs = re.findall('Total :\s+\d+', wa )
 
@@ -54,5 +59,19 @@ def getWaStr():
 
     return res
 
+# wa = getWaStr()
+
 wa = getWaStr()
+res = generateCopy(sheetParams='20082022')
+
+# print(res)
+for key in res :
+    if res[key] != wa[key] :
+        print("VALIDATION ERROR! "+key+" WA:"+str(wa[key])+ " file:"+str(res[key]) )
+        # raise Exception('key tidak sama.' + key)
+        sys.exit()
+
+print(res)
 print(wa)
+print('data sama! lanjutkan!')
+# print(result)
