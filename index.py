@@ -76,7 +76,11 @@ def getWaStr():
 # wa = getWaStr()
 
 wa = getWaStr()
-res = generateCopy()
+Sheetname = input('input sheetname :')
+if Sheetname == '':
+    Sheetname = None
+    
+res = generateCopy(sheetParams=Sheetname)
 
 # print(res)
 for key in res :
