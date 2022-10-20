@@ -19,7 +19,7 @@ def getLatestExcel():
     return files_xls
 
 def generateCopy(filenameParams=None, sheetParams=None):
-    file_name = filenameParams if filenameParams else  getLatestExcel()# path to file + file name
+    file_name = filenameParams
     
     sheet = sheetParams if sheetParams else datetime.today().strftime('%d%m%Y')  #'19082022'# sheet name or sheet number or list of sheet numbers and names
 
@@ -79,8 +79,9 @@ wa = getWaStr()
 Sheetname = input('input sheetname :')
 if Sheetname == '':
     Sheetname = None
-    
-res = generateCopy(sheetParams=Sheetname)
+
+filenameParams = getLatestExcel()    
+res = generateCopy( filenameParams=filenameParams, sheetParams=Sheetname)
 
 # print(res)
 for key in res :
@@ -91,5 +92,13 @@ for key in res :
 
 print(res)
 print(wa)
+
+# kalau sama remove file
+try:
+    os.remove(filenameParams)
+    print('excel deleted!')
+except OSError:
+    pass
+
 print('data sama! lanjutkan!')
 # print(result)
